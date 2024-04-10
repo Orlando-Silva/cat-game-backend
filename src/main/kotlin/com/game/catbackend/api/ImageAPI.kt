@@ -25,4 +25,9 @@ class ImageAPI(val imageService: ImageService) {
         return imageService.getAll()
     }
 
+    @GetMapping("/random")
+    fun getRandom(): List<Image> {
+        return imageService.getRandom()
+    }
+
 }

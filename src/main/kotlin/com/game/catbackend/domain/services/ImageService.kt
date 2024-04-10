@@ -25,4 +25,8 @@ class ImageService(val imageRepository: ImageRepository) {
         return imageRepository.findByActiveTrue()
     }
 
+    fun getRandom(): List<Image> {
+        return imageRepository.findAllThreeRandom()
+    }
+
 }
