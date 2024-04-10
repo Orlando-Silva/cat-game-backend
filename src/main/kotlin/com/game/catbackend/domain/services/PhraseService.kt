@@ -25,4 +25,8 @@ class PhraseService(val phraseRepository: PhraseRepository) {
         return phraseRepository.findByActiveTrue()
     }
 
+    fun takeLastThree(): List<Phrase> {
+        return phraseRepository.findByActiveTrue().takeLast(3)
+    }
+
 }
