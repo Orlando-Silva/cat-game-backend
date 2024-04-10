@@ -16,8 +16,8 @@ class Phrase(
     @Column(name="created_at")
     val createdAt: Date = Date(),
 
-    @Column(name="is_active")
-    var isActive: Boolean = false,
+    @Column(name="active")
+    var active: Boolean = false,
 
     @Column(length = 200, nullable = false)
     var text: String = ""

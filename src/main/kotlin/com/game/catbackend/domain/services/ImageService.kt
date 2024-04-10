@@ -12,7 +12,7 @@ class ImageService(val imageRepository: ImageRepository) {
 
     fun add(imageDto: ImageDTO): Image {
         val image = imageDto.toImage()
-        image.isActive = true
+        image.active = true
 
         return imageRepository.save(image)
     }
@@ -22,7 +22,7 @@ class ImageService(val imageRepository: ImageRepository) {
     }
 
     fun getAll(): List<Image> {
-        return imageRepository.findAll()
+        return imageRepository.findByActiveTrue()
     }
 
 }

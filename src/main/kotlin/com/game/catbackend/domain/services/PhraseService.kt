@@ -12,7 +12,7 @@ class PhraseService(val phraseRepository: PhraseRepository) {
 
     fun add(phraseDto: PhraseDTO): Phrase {
         val phrase = phraseDto.toPhrase()
-        phrase.isActive = true
+        phrase.active = true
 
         return phraseRepository.save(phrase)
     }
@@ -22,7 +22,7 @@ class PhraseService(val phraseRepository: PhraseRepository) {
     }
 
     fun getAll(): List<Phrase> {
-        return phraseRepository.findAll()
+        return phraseRepository.findByActiveTrue()
     }
 
 }
