@@ -29,4 +29,8 @@ class PhraseService(val phraseRepository: PhraseRepository) {
         return phraseRepository.findByActiveTrue().takeLast(3)
     }
 
+    fun getThreeRandomPhrases(): List<Phrase> {
+        return phraseRepository.findThreeRandomPhrases()
+    }
+
 }
