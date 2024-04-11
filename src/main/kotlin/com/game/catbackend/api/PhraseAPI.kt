@@ -27,8 +27,8 @@ class PhraseAPI(val phraseService: PhraseService) {
     }
 
     @GetMapping("/random")
-    fun getLastThreePhrases(): List<Phrase> {
-        return phraseService.takeLastThree()
+    fun getThreeRandomPhrases(): List<Phrase> {
+        return phraseService.getThreeRandomPhrases()
     }
 
 
