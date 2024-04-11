@@ -9,11 +9,11 @@ class Image(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0,
+    var id: Long = 0,
 
     @Temporal(TemporalType.DATE)
     @Column(name="created_at")
-    val createdAt: Date = Date(),
+    var createdAt: Date = Date(),
 
     @Column(name="active")
     var active: Boolean = false,
