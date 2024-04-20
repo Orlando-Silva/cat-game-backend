@@ -2,6 +2,7 @@ package com.game.catbackend.data
 
 
 import com.game.catbackend.domain.entities.Lobby
+import com.game.catbackend.domain.enums.Status
 import com.github.javafaker.Faker
 import java.text.SimpleDateFormat
 import java.util.*
@@ -12,9 +13,10 @@ class LobbyBuilder {
     private var faker: Faker = Faker()
     private val lobby: Lobby = Lobby()
 
+
     init {
         lobby.id = faker.number().randomNumber()
-        lobby.status = faker.name().title()
+        lobby.status = Status.PENDING
         lobby.createdAt = sdf.parse(sdf.format(faker.date().birthday()))
         lobby.roomId = UUID.randomUUID()
         lobby.hostId = faker.number().randomNumber()
@@ -30,7 +32,7 @@ class LobbyBuilder {
         this.lobby.createdAt = createdAt;
         return this;
     }
-    fun withStatus(status: String): LobbyBuilder {
+    fun withStatus(status: Status): LobbyBuilder {
         this.lobby.status = status
         return this
     }

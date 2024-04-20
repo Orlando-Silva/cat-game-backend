@@ -1,5 +1,6 @@
 package com.game.catbackend.domain.entities
 
+import com.game.catbackend.domain.enums.Status
 import jakarta.persistence.*
 import java.util.*
 
@@ -15,11 +16,12 @@ class Lobby(
     @Column(name="created_at")
     var createdAt: Date = Date(),
 
-    @Column(name="status", length = 50)
-    var status: String = "",
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", length = 50)
+    var status: Status = Status.PENDING,
 
-    @Column(name = "room_id")
-    var roomId: UUID? = UUID.randomUUID(),
+    @Column(name = "room_id", nullable = false, columnDefinition = "BINARY(16)")
+    var roomId: UUID = UUID.randomUUID(),
 
     @Column(name="host_id", nullable = false)
     var hostId: Long = 0
