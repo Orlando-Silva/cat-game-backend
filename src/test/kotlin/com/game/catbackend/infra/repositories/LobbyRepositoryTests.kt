@@ -20,17 +20,16 @@ class LobbyRepositoryTests : CatBackendBaseTest() {
     @Test
     fun `when findById is called with existing id it should return the appropriate Lobby`() {
         val lobby = LobbyBuilder()
-            .withId(1)
             .build()
-        lobbyRepository.save(lobby)
+        val persistedLobby = lobbyRepository.save(lobby)
 
-        val result = lobbyRepository.findById(1)
+        val result = lobbyRepository.findById(persistedLobby.id)
 
-        assertThat(result.get().id).isEqualTo(lobby.id)
-        assertThat(result.get().status).isEqualTo(lobby.status)
-        assertThat(result.get().createdAt).isEqualTo(lobby.createdAt)
-        assertThat(result.get().roomId).isEqualTo(lobby.roomId)
-        assertThat(result.get().hostId).isEqualTo(lobby.hostId)
+        assertThat(result.get().id).isEqualTo(persistedLobby.id)
+        assertThat(result.get().createdAt).isEqualTo(persistedLobby.createdAt)
+        assertThat(result.get().status).isEqualTo(persistedLobby.status)
+        assertThat(result.get().roomId).isEqualTo(persistedLobby.roomId)
+        assertThat(result.get().hostId).isEqualTo(persistedLobby.hostId)
     }
 
 }
