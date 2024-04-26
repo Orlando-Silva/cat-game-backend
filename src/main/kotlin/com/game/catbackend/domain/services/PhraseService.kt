@@ -4,17 +4,25 @@ import com.game.catbackend.api.dto.PhraseDTO
 import com.game.catbackend.api.dto.toPhrase
 import com.game.catbackend.domain.entities.Phrase
 import com.game.catbackend.infra.repositories.PhraseRepository
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import org.springframework.web.server.ResponseStatusException
 import java.util.*
 
 @Service
 class PhraseService(val phraseRepository: PhraseRepository) {
 
     fun add(phraseDto: PhraseDTO): Phrase {
+        val text_length = phraseDto.text.length
         val phrase = phraseDto.toPhrase()
-        phrase.active = true
 
-        return phraseRepository.save(phrase)
+        if (text_length == 0) throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Phrase text must be specified.")
+        if (text_length <= 200) {
+            phrase.active = true
+            return phraseRepository.save(phrase)
+        }
+        else throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Phrase text must be less than 200 characters long.")
+
     }
 
     fun get(id: Long): Optional<Phrase> {
