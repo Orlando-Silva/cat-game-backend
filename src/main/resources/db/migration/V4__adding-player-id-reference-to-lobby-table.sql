@@ -1,0 +1,1 @@
+ALTER TABLE lobby ADD CONSTRAINT fk_host_id FOREIGN KEY (host_id) REFERENCES player(id);

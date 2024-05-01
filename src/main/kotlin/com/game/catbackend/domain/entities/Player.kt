@@ -9,15 +9,15 @@ class Player (
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0,
+    var id: Long = 0,
 
     @Temporal(TemporalType.DATE)
     @Column(name="created_at")
-    val createdAt: Date = Date(),
+    var createdAt: Date = Date(),
 
     @Column(length = 50, nullable = false)
-    val username: String = "",
+    var username: String = "",
 
     @Column(name = "lobby_id", nullable = false)
-    val lobbyId: Long
+    var lobbyId: Long = 0
 )

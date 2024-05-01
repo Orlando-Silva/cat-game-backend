@@ -15,7 +15,6 @@ class LobbyBuilder {
 
 
     init {
-        lobby.id = faker.number().randomNumber()
         lobby.status = Status.PENDING
         lobby.createdAt = sdf.parse(sdf.format(faker.date().birthday()))
         lobby.roomId = UUID.randomUUID()

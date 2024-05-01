@@ -10,7 +10,6 @@ class ImageBuilder {
     private val image: Image = Image()
 
     init {
-        image.id = faker.number().randomNumber()
         image.active = faker.bool().bool()
         image.source = faker.name().title()
         image.createdAt = faker.date().birthday()
