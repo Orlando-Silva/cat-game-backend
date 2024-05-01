@@ -5,6 +5,10 @@ import com.game.catbackend.api.dto.LobbyDTO
 import com.game.catbackend.domain.entities.Lobby
 import com.game.catbackend.domain.services.LobbyService
 import jakarta.validation.Valid
+import com.game.catbackend.api.dto.JoinLobbyDTO
+import com.game.catbackend.domain.entities.Lobby
+import com.game.catbackend.domain.services.LobbyService
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
@@ -20,5 +24,16 @@ class LobbyAPI(val lobbyService: LobbyService) {
     @PostMapping
     fun addLobby(@RequestBody @Valid lobbyDTO: LobbyDTO): AddLobbyDTO {
         return AddLobbyDTO(lobbyService.addLobby(lobbyDTO.username))
+    }
+
+    @PostMapping("/{roomId}")
+    fun joinLobby(@PathVariable roomId: UUID, @RequestBody joinLobbyDTO: JoinLobbyDTO): ResponseEntity<Map<String, Any>> {
+        lobbyService.joinLobby(roomId, joinLobbyDTO)
+        val playerList = lobbyService.getPlayerUsernameListByRoomId(roomId)
+        val response = mapOf(
+            "roomId" to roomId.toString(),
+            "playerList" to playerList
+        )
+        return ResponseEntity.ok(response)
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query
 import java.util.*
 
 interface LobbyRepository : JpaRepository<Lobby, Long> {
-    fun findByRoomId(roomId: UUID): Lobby
+
+    fun findByRoomId(roomId: UUID): Optional<Lobby>
 
 }
