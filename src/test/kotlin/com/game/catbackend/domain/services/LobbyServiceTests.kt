@@ -2,6 +2,7 @@ package com.game.catbackend.domain.services
 
 import com.game.catbackend.CatBackendBaseTest
 import com.game.catbackend.data.LobbyBuilder
+import com.game.catbackend.domain.enums.Status
 import com.game.catbackend.infra.repositories.LobbyRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -25,17 +26,31 @@ class LobbyServiceTests : CatBackendBaseTest() {
     @Test
     fun `when get is called with existing id it should return the appropriate Lobby`() {
         val lobby = LobbyBuilder()
-            .withId(1)
             .build()
-        lobbyRepository.save(lobby)
+        val persistedLobby = lobbyRepository.save(lobby)
 
-        val result = lobbyService.get(1)
+        val result = lobbyService.get(persistedLobby.id)
 
-        assertThat(result.get().id).isEqualTo(lobby.id)
-        assertThat(result.get().status).isEqualTo(lobby.status)
-        assertThat(result.get().createdAt).isEqualTo(lobby.createdAt)
-        assertThat(result.get().roomId).isEqualTo(lobby.roomId)
-        assertThat(result.get().hostId).isEqualTo(lobby.hostId)
+        assertThat(result.get().id).isEqualTo(persistedLobby.id)
+        assertThat(result.get().createdAt).isEqualTo(persistedLobby.createdAt)
+        assertThat(result.get().status).isEqualTo(persistedLobby.status)
+        assertThat(result.get().roomId).isEqualTo(persistedLobby.roomId)
+    }
+
+    @Test
+    fun `when addLobby is called it should create a new lobby with Pending status and a new player register and return the roomId`() {
+        val username = "alan"
+
+        val roomId = lobbyService.addLobby(username)
+
+        val createdLobby = lobbyRepository.findByRoomId(UUID.fromString(roomId))
+
+        // TODO: Player test
+
+        assertThat(createdLobby).isNotNull
+        assertThat(createdLobby.status).isEqualTo(Status.PENDING)
+        assertThat(createdLobby.roomId.toString()).isEqualTo(roomId)
+
     }
 
 }

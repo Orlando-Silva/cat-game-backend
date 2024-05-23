@@ -22,7 +22,4 @@ class Lobby(
 
     @Column(name = "room_id", nullable = false, columnDefinition = "BINARY(16)")
     var roomId: UUID = UUID.randomUUID(),
-
-    @Column(name="host_id", nullable = false)
-    var hostId: Long = 0
 )
