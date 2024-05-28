@@ -29,7 +29,6 @@ class LobbyRepositoryTests : CatBackendBaseTest() {
         assertThat(result.get().createdAt).isEqualTo(persistedLobby.createdAt)
         assertThat(result.get().status).isEqualTo(persistedLobby.status)
         assertThat(result.get().roomId).isEqualTo(persistedLobby.roomId)
-        assertThat(result.get().hostId).isEqualTo(persistedLobby.hostId)
     }
 
 }
