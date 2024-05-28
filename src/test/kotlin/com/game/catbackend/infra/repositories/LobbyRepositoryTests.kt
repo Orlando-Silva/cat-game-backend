@@ -26,11 +26,10 @@ class LobbyRepositoryTests : CatBackendBaseTest() {
         val hostPlayer = PlayerBuilder()
             .withUsername("host")
             .build()
-        val persistedPlayer = playerRepository.save(hostPlayer)
 
+        playerRepository.save(hostPlayer)
 
         val lobby = LobbyBuilder()
-            .withHostId(persistedPlayer.id)
             .build()
         val persistedLobby = lobbyRepository.save(lobby)
 
@@ -40,7 +39,6 @@ class LobbyRepositoryTests : CatBackendBaseTest() {
         assertThat(result.get().createdAt).isEqualTo(persistedLobby.createdAt)
         assertThat(result.get().status).isEqualTo(persistedLobby.status)
         assertThat(result.get().roomId).isEqualTo(persistedLobby.roomId)
-        assertThat(result.get().hostId).isEqualTo(persistedLobby.hostId)
     }
 
     @Test
@@ -48,12 +46,11 @@ class LobbyRepositoryTests : CatBackendBaseTest() {
         val hostPlayer = PlayerBuilder()
             .withUsername("host")
             .build()
-        val persistedPlayer = playerRepository.save(hostPlayer)
+        playerRepository.save(hostPlayer)
 
 
         val lobby = LobbyBuilder()
             .withRoomId(UUID.randomUUID())
-            .withHostId(persistedPlayer.id)
             .build()
         val persistedLobby = lobbyRepository.save(lobby)
 
@@ -68,11 +65,10 @@ class LobbyRepositoryTests : CatBackendBaseTest() {
         val hostPlayer = PlayerBuilder()
             .withUsername("host")
             .build()
-        val persistedPlayer = playerRepository.save(hostPlayer)
+        playerRepository.save(hostPlayer)
 
         val lobby = LobbyBuilder()
             .withRoomId(UUID.randomUUID())
-            .withHostId(persistedPlayer.id)
             .build()
         val persistedLobby = lobbyRepository.save(lobby)
 

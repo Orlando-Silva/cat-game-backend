@@ -18,8 +18,6 @@ class LobbyBuilder {
         lobby.status = Status.PENDING
         lobby.createdAt = sdf.parse(sdf.format(faker.date().birthday()))
         lobby.roomId = UUID.randomUUID()
-        lobby.hostId = faker.number().randomNumber()
-
     }
 
     fun withId(id: Long): LobbyBuilder {
@@ -38,11 +36,6 @@ class LobbyBuilder {
 
     fun withRoomId(roomId: UUID): LobbyBuilder {
         this.lobby.roomId = roomId
-        return this
-    }
-
-    fun withHostId(hostId: Long): LobbyBuilder {
-        this.lobby.hostId = hostId
         return this
     }
 

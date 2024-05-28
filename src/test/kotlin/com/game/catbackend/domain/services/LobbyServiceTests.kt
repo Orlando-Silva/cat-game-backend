@@ -11,7 +11,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import java.util.*
 
@@ -45,7 +44,6 @@ class LobbyServiceTests : CatBackendBaseTest() {
 
         val lobby = LobbyBuilder()
             .withRoomId(UUID.randomUUID())
-            .withHostId(persistedPlayer.id)
             .build()
         val persistedLobby = lobbyRepository.save(lobby)
 
@@ -56,7 +54,36 @@ class LobbyServiceTests : CatBackendBaseTest() {
         assertThat(result.get().status).isEqualTo(persistedLobby.status)
         assertThat(result.get().createdAt).isEqualTo(persistedLobby.createdAt)
         assertThat(result.get().roomId).isEqualTo(persistedLobby.roomId)
-        assertThat(result.get().hostId).isEqualTo(persistedPlayer.id)
+    }
+
+    @Test
+    fun `when addLobby is called it should create a new lobby with Pending status and a new player register and return the roomId`() {
+        val username = "host"
+
+        val roomId = lobbyService.addLobby(username)
+
+        val createdLobby = lobbyRepository.findByRoomId(UUID.fromString(roomId)).get()
+
+        assertThat(createdLobby).isNotNull
+        assertThat(createdLobby.status).isEqualTo(Status.PENDING)
+
+        val hostPlayer = PlayerBuilder()
+            .withUsername("host")
+            .build()
+        val persistedPlayer = playerRepository.save(hostPlayer)
+
+        val lobby = LobbyBuilder()
+            .withRoomId(UUID.randomUUID())
+            .build()
+        val persistedLobby = lobbyRepository.save(lobby)
+
+        val result = lobbyService.get(persistedLobby.id)
+
+        assertThat(result.isPresent).isTrue
+        assertThat(result.get().id).isEqualTo(persistedLobby.id)
+        assertThat(result.get().status).isEqualTo(persistedLobby.status)
+        assertThat(result.get().createdAt).isEqualTo(persistedLobby.createdAt)
+        assertThat(result.get().roomId).isEqualTo(persistedLobby.roomId)
     }
 
     @Test
@@ -68,7 +95,6 @@ class LobbyServiceTests : CatBackendBaseTest() {
 
         val lobby = LobbyBuilder()
             .withRoomId(UUID.randomUUID())
-            .withHostId(persistedPlayer.id)
             .withStatus(Status.PENDING)
             .build()
         val persistedLobby = lobbyRepository.save(lobby)
@@ -89,7 +115,6 @@ class LobbyServiceTests : CatBackendBaseTest() {
 
         val lobby = LobbyBuilder()
             .withRoomId(UUID.randomUUID())
-            .withHostId(persistedPlayer.id)
             .withStatus(Status.PENDING)
             .build()
         val persistedLobby = lobbyRepository.save(lobby)
@@ -101,7 +126,7 @@ class LobbyServiceTests : CatBackendBaseTest() {
         println("Generated ids:")
         players.forEach{println("${it.id}  ${it.username}")}
 
-        val playersInLobby = playerRepository.findAllPlayersByLobbyId(persistedLobby.id)
+        val playersInLobby = playerRepository.findAllByLobbyId(persistedLobby.id)
         println("DB Size:")
         println(playersInLobby.size)
         println("Oi")

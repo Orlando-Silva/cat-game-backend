@@ -12,7 +12,6 @@ class PlayerBuilder {
     private var sdf: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
 
     init {
-        println(player.id)
         player.createdAt = sdf.parse(sdf.format(faker.date().birthday()))
         player.lobbyId = faker.number().randomNumber()
         player.username = faker.pokemon().name()

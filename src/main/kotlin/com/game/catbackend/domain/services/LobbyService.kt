@@ -1,16 +1,16 @@
 package com.game.catbackend.domain.services
 
 import com.game.catbackend.api.dto.JoinLobbyDTO
+import com.game.catbackend.api.dto.response.JoinLobbyResponse
 import com.game.catbackend.infra.repositories.LobbyRepository
 import com.game.catbackend.domain.entities.Lobby
+import com.game.catbackend.domain.entities.Player
 import com.game.catbackend.domain.enums.Status
 import com.game.catbackend.domain.exceptions.CatGameLobbyFullException
 import com.game.catbackend.domain.exceptions.CatGameLobbyNotFoundException
 import com.game.catbackend.domain.exceptions.CatGameLobbyStatusException
 import com.game.catbackend.domain.exceptions.CatGamePlayerAlreadyExistsException
-import com.game.catbackend.domain.services.PlayerService
 import org.springframework.stereotype.Service
-import com.game.catbackend.domain.entities.Player
 import java.util.*
 
 @Service
@@ -20,6 +20,17 @@ class LobbyService(val lobbyRepository : LobbyRepository, val playerService: Pla
         return lobbyRepository.findById(id)
     }
 
+    fun addLobby(username: String): String {
+        val lobby = Lobby()
+        lobby.status = Status.PENDING
+        lobbyRepository.save(lobby)
+
+        val player = Player(username = username, lobbyId = lobby.id)
+        playerService.create(player)
+
+        return lobby.roomId.toString()
+    }
+    
     fun getLobbyByRoomId(roomId: UUID): Optional<Lobby> {
         return lobbyRepository.findByRoomId(roomId)
     }
@@ -30,7 +41,7 @@ class LobbyService(val lobbyRepository : LobbyRepository, val playerService: Pla
         return playerList.map { it.username }
     }
 
-    fun joinLobby(roomId: UUID, joinLobbyDTO: JoinLobbyDTO) {
+    fun joinLobby(roomId: UUID, joinLobbyDTO: JoinLobbyDTO) : JoinLobbyResponse {
         val lobby = lobbyRepository.findByRoomId(roomId).orElseThrow { CatGameLobbyNotFoundException("Lobby does not exist.") }
 
         if (lobby.status != Status.PENDING) {
@@ -47,5 +58,6 @@ class LobbyService(val lobbyRepository : LobbyRepository, val playerService: Pla
         }
 
         playerService.addPlayer(joinLobbyDTO.userName, lobby.id)
+        return JoinLobbyResponse(roomId.toString(), players.map { p -> p.username })
     }
 }
