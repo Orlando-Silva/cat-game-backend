@@ -10,4 +10,16 @@ class PlayerService(val playerRepository: PlayerRepository) {
     fun create(player: Player): Player {
         return playerRepository.save(player)
     }
+    
+    fun findPlayersByLobbyId(lobbyId: Long): List<Player> {
+        return playerRepository.findAllByLobbyId(lobbyId)
+    }
+
+    fun addPlayer(username: String, lobbyId: Long): Player {
+        val newPlayer = Player(
+            username = username,
+            lobbyId = lobbyId
+        )
+        return playerRepository.save(newPlayer)
+    }
 }

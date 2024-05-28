@@ -1,10 +1,13 @@
 package com.game.catbackend.api
 
-import com.game.catbackend.api.dto.response.AddLobbyDTO
-import com.game.catbackend.api.dto.LobbyDTO
+import com.game.catbackend.api.dto.JoinLobbyDTO
 import com.game.catbackend.domain.entities.Lobby
 import com.game.catbackend.domain.services.LobbyService
+import com.game.catbackend.api.dto.response.AddLobbyDTO
+import com.game.catbackend.api.dto.LobbyDTO
+import com.game.catbackend.api.dto.response.JoinLobbyResponse
 import jakarta.validation.Valid
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
@@ -20,5 +23,10 @@ class LobbyAPI(val lobbyService: LobbyService) {
     @PostMapping
     fun addLobby(@RequestBody @Valid lobbyDTO: LobbyDTO): AddLobbyDTO {
         return AddLobbyDTO(lobbyService.addLobby(lobbyDTO.username))
+    }
+
+    @PostMapping("/{roomId}")
+    fun joinLobby(@PathVariable roomId: UUID, @RequestBody joinLobbyDTO: JoinLobbyDTO): ResponseEntity<JoinLobbyResponse> {
+        return ResponseEntity.ok(lobbyService.joinLobby(roomId, joinLobbyDTO))
     }
 }
