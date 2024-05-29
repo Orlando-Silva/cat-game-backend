@@ -1,8 +1,9 @@
 package com.game.catbackend.api
 
-import com.game.catbackend.api.dto.PhraseDTO
+import com.game.catbackend.api.dto.request.PhraseRequest
 import com.game.catbackend.domain.entities.Phrase
 import com.game.catbackend.domain.services.PhraseService
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.Optional
 
@@ -12,23 +13,23 @@ import java.util.Optional
 class PhraseAPI(val phraseService: PhraseService) {
 
     @PostMapping()
-    fun add(@RequestBody phraseDTO: PhraseDTO): Phrase {
-        return phraseService.add(phraseDTO)
+    fun add(@RequestBody phraseRequest: PhraseRequest): ResponseEntity<Phrase> {
+        return ResponseEntity.ok(phraseService.add(phraseRequest))
     }
 
     @GetMapping("/{id}")
-    fun get(@PathVariable id: Long): Optional<Phrase> {
-        return phraseService.get(id)
+    fun get(@PathVariable id: Long): ResponseEntity<Optional<Phrase>> {
+        return ResponseEntity.ok(phraseService.get(id))
     }
 
     @GetMapping()
-    fun getAll(): List<Phrase> {
-        return phraseService.getAll()
+    fun getAll(): ResponseEntity<List<Phrase>> {
+        return ResponseEntity.ok(phraseService.getAll())
     }
 
     @GetMapping("/random")
-    fun getThreeRandomPhrases(): List<Phrase> {
-        return phraseService.getThreeRandomPhrases()
+    fun getRandom(): ResponseEntity<List<Phrase>> {
+        return ResponseEntity.ok(phraseService.getThreeRandomPhrases())
     }
 
 

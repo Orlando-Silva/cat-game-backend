@@ -1,7 +1,7 @@
 package com.game.catbackend.domain.services
 
 import com.game.catbackend.CatBackendBaseTest
-import com.game.catbackend.api.dto.ImageDTO
+import com.game.catbackend.api.dto.request.ImageRequest
 import com.game.catbackend.domain.exceptions.CatGameInvalidAttributeException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable
@@ -19,7 +19,7 @@ class ImageServiceTests() : CatBackendBaseTest(){
         val source = "https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square/NationalGeographic_2572187_square/NationalGeographic_2572187_square/NationalGeographic_2572187_square/NationalGeographic_2572187_square.jpg";
 
         val imageErrorException = catchThrowable {
-            imageService.add(ImageDTO(source))
+            imageService.add(ImageRequest(source))
         }
 
         assertThat(imageErrorException).isInstanceOf(CatGameInvalidAttributeException::class.java)

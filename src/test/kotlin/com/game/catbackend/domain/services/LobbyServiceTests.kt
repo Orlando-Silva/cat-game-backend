@@ -1,10 +1,10 @@
 package com.game.catbackend.domain.services
 
 import com.game.catbackend.CatBackendBaseTest
-import com.game.catbackend.api.dto.JoinLobbyDTO
+import com.game.catbackend.api.dto.request.JoinLobbyRequest
 import com.game.catbackend.data.LobbyBuilder
 import com.game.catbackend.data.PlayerBuilder
-import com.game.catbackend.domain.enums.Status
+import com.game.catbackend.domain.enums.LobbyStatus
 import com.game.catbackend.infra.repositories.LobbyRepository
 import com.game.catbackend.infra.repositories.PlayerRepository
 import org.assertj.core.api.Assertions.assertThat
@@ -60,12 +60,12 @@ class LobbyServiceTests : CatBackendBaseTest() {
     fun `when addLobby is called it should create a new lobby with Pending status and a new player register and return the roomId`() {
         val username = "host"
 
-        val roomId = lobbyService.addLobby(username)
+        val addedLobby = lobbyService.addLobby(username)
 
-        val createdLobby = lobbyRepository.findByRoomId(UUID.fromString(roomId)).get()
+        val createdLobby = lobbyRepository.findByRoomId(UUID.fromString(addedLobby.roomId)).get()
 
         assertThat(createdLobby).isNotNull
-        assertThat(createdLobby.status).isEqualTo(Status.PENDING)
+        assertThat(createdLobby.status).isEqualTo(LobbyStatus.PENDING)
 
         val hostPlayer = PlayerBuilder()
             .withUsername("host")
@@ -95,13 +95,13 @@ class LobbyServiceTests : CatBackendBaseTest() {
 
         val lobby = LobbyBuilder()
             .withRoomId(UUID.randomUUID())
-            .withStatus(Status.PENDING)
+            .withStatus(LobbyStatus.PENDING)
             .build()
         val persistedLobby = lobbyRepository.save(lobby)
 
-        val joinLobbyDTO = JoinLobbyDTO("Player 9")
+        val joinLobbyRequest = JoinLobbyRequest("Player 9")
 
-        lobbyService.joinLobby(persistedLobby.roomId, joinLobbyDTO)
+        lobbyService.joinLobby(persistedLobby.roomId, joinLobbyRequest)
 
         assertThat(playerService.findPlayersByLobbyId(persistedLobby.id).size).isEqualTo(1)
     }
@@ -115,7 +115,7 @@ class LobbyServiceTests : CatBackendBaseTest() {
 
         val lobby = LobbyBuilder()
             .withRoomId(UUID.randomUUID())
-            .withStatus(Status.PENDING)
+            .withStatus(LobbyStatus.PENDING)
             .build()
         val persistedLobby = lobbyRepository.save(lobby)
 
@@ -132,10 +132,10 @@ class LobbyServiceTests : CatBackendBaseTest() {
         println("Oi")
         playersInLobby.forEach{println("${it.id}  ${it.username}")}
 
-        val joinLobbyDTO = JoinLobbyDTO("Player 9")
+        val joinLobbyRequest = JoinLobbyRequest("Player 9")
 
         val exception = assertThrows<Exception> {
-            lobbyService.joinLobby(persistedLobby.roomId, joinLobbyDTO)
+            lobbyService.joinLobby(persistedLobby.roomId, joinLobbyRequest)
         }
 
         assertThat(exception.message).isEqualTo("Lobby is full.")

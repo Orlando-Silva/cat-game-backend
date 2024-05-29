@@ -9,7 +9,7 @@ interface PhraseRepository : JpaRepository<Phrase, Long> {
     fun findByActiveTrue(): List<Phrase>
 
     @Query(
-            value = "SELECT * FROM phrase ORDER BY RANDOM() LIMIT 3",
-            nativeQuery = true)
-    fun findThreeRandomPhrases(): List<Phrase>;
+        value = "SELECT * FROM phrase ORDER BY RANDOM() LIMIT 3",
+        nativeQuery = true)
+    fun findAllThreeRandom(): List<Phrase>
 }

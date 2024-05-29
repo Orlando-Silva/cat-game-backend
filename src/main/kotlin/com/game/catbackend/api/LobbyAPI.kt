@@ -1,10 +1,10 @@
 package com.game.catbackend.api
 
-import com.game.catbackend.api.dto.JoinLobbyDTO
+import com.game.catbackend.api.dto.request.JoinLobbyRequest
 import com.game.catbackend.domain.entities.Lobby
 import com.game.catbackend.domain.services.LobbyService
-import com.game.catbackend.api.dto.response.AddLobbyDTO
-import com.game.catbackend.api.dto.LobbyDTO
+import com.game.catbackend.api.dto.response.AddLobbyResponse
+import com.game.catbackend.api.dto.request.AddLobbyRequest
 import com.game.catbackend.api.dto.response.JoinLobbyResponse
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
@@ -21,12 +21,14 @@ class LobbyAPI(val lobbyService: LobbyService) {
     }
 
     @PostMapping
-    fun addLobby(@RequestBody @Valid lobbyDTO: LobbyDTO): AddLobbyDTO {
-        return AddLobbyDTO(lobbyService.addLobby(lobbyDTO.username))
+    fun add(@RequestBody @Valid addLobbyRequest: AddLobbyRequest): ResponseEntity<AddLobbyResponse> {
+        val response = lobbyService.addLobby(addLobbyRequest.username)
+        return ResponseEntity.ok(response)
     }
 
     @PostMapping("/{roomId}")
-    fun joinLobby(@PathVariable roomId: UUID, @RequestBody joinLobbyDTO: JoinLobbyDTO): ResponseEntity<JoinLobbyResponse> {
-        return ResponseEntity.ok(lobbyService.joinLobby(roomId, joinLobbyDTO))
+    fun join(@PathVariable roomId: UUID, @RequestBody joinLobbyRequest: JoinLobbyRequest): ResponseEntity<JoinLobbyResponse> {
+        val response = lobbyService.joinLobby(roomId, joinLobbyRequest)
+        return ResponseEntity.ok(response)
     }
 }

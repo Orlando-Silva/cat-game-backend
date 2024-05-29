@@ -1,7 +1,7 @@
 package com.game.catbackend.domain.services
 
-import com.game.catbackend.api.dto.ImageDTO
-import com.game.catbackend.api.dto.toImage
+import com.game.catbackend.api.dto.request.ImageRequest
+import com.game.catbackend.api.dto.request.toImage
 import com.game.catbackend.domain.entities.Image
 import com.game.catbackend.domain.exceptions.CatGameInvalidAttributeException
 import com.game.catbackend.infra.repositories.ImageRepository
@@ -11,13 +11,14 @@ import java.util.*
 @Service
 class ImageService(val imageRepository: ImageRepository) {
 
-    fun add(imageDto: ImageDTO): Image {
-        val image = imageDto.toImage()
+    fun add(imageRequest: ImageRequest): Image {
+        val image = imageRequest.toImage()
         image.active = true
 
         if (image.source.length > 200) {
-            return throw CatGameInvalidAttributeException("The length of image source needs to be less than 200 characters!")
+            throw CatGameInvalidAttributeException("The length of image source needs to be less than 200 characters!")
         }
+
         return imageRepository.save(image)
     }
 

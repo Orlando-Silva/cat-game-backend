@@ -1,11 +1,12 @@
 package com.game.catbackend.domain.services
 
-import com.game.catbackend.api.dto.JoinLobbyDTO
+import com.game.catbackend.api.dto.request.JoinLobbyRequest
+import com.game.catbackend.api.dto.response.AddLobbyResponse
 import com.game.catbackend.api.dto.response.JoinLobbyResponse
 import com.game.catbackend.infra.repositories.LobbyRepository
 import com.game.catbackend.domain.entities.Lobby
 import com.game.catbackend.domain.entities.Player
-import com.game.catbackend.domain.enums.Status
+import com.game.catbackend.domain.enums.LobbyStatus
 import com.game.catbackend.domain.exceptions.CatGameLobbyFullException
 import com.game.catbackend.domain.exceptions.CatGameLobbyNotFoundException
 import com.game.catbackend.domain.exceptions.CatGameLobbyStatusException
@@ -20,36 +21,29 @@ class LobbyService(val lobbyRepository : LobbyRepository, val playerService: Pla
         return lobbyRepository.findById(id)
     }
 
-    fun addLobby(username: String): String {
-        val lobby = Lobby()
-        lobby.status = Status.PENDING
-        lobbyRepository.save(lobby)
+    fun addLobby(username: String): AddLobbyResponse {
+        val lobby = lobbyRepository.save(
+            Lobby(status = LobbyStatus.PENDING)
+        )
 
-        val player = Player(username = username, lobbyId = lobby.id)
-        playerService.create(player)
+        playerService.create(
+            Player(username = username, lobbyId = lobby.id)
+        )
 
-        return lobby.roomId.toString()
-    }
-    
-    fun getLobbyByRoomId(roomId: UUID): Optional<Lobby> {
-        return lobbyRepository.findByRoomId(roomId)
+        return AddLobbyResponse(lobby.roomId.toString())
     }
 
-    fun getPlayerUsernameListByRoomId(roomId: UUID): List<String> {
-        val lobby = lobbyRepository.findByRoomId(roomId).orElseThrow { CatGameLobbyNotFoundException("Lobby does not exist.") }
-        val playerList = playerService.findPlayersByLobbyId(lobby.id)
-        return playerList.map { it.username }
-    }
+    fun joinLobby(roomId: UUID, joinLobbyRequest: JoinLobbyRequest) : JoinLobbyResponse {
+        val lobby = lobbyRepository.findByRoomId(roomId).orElseThrow {
+            CatGameLobbyNotFoundException("Lobby does not exist.")
+        }
 
-    fun joinLobby(roomId: UUID, joinLobbyDTO: JoinLobbyDTO) : JoinLobbyResponse {
-        val lobby = lobbyRepository.findByRoomId(roomId).orElseThrow { CatGameLobbyNotFoundException("Lobby does not exist.") }
-
-        if (lobby.status != Status.PENDING) {
+        if (lobby.status != LobbyStatus.PENDING) {
             throw CatGameLobbyStatusException("Lobby is not in PENDING status.")
         }
 
         val players = playerService.findPlayersByLobbyId(lobby.id)
-        if (players.any { it.username == joinLobbyDTO.userName }) {
+        if (players.any { it.username == joinLobbyRequest.userName }) {
             throw CatGamePlayerAlreadyExistsException("Player name already exists in lobby.")
         }
 
@@ -57,7 +51,11 @@ class LobbyService(val lobbyRepository : LobbyRepository, val playerService: Pla
             throw CatGameLobbyFullException("Lobby is full.")
         }
 
-        playerService.addPlayer(joinLobbyDTO.userName, lobby.id)
-        return JoinLobbyResponse(roomId.toString(), players.map { p -> p.username })
+        playerService.addPlayer(joinLobbyRequest.userName, lobby.id)
+
+        return JoinLobbyResponse(
+            roomId.toString(),
+            players.map { p -> p.username }
+        )
     }
 }
