@@ -1,7 +1,7 @@
 package com.game.catbackend.domain.services
 
-import com.game.catbackend.api.dto.PhraseDTO
-import com.game.catbackend.api.dto.toPhrase
+import com.game.catbackend.api.dto.request.PhraseRequest
+import com.game.catbackend.api.dto.request.toPhrase
 import com.game.catbackend.domain.entities.Phrase
 import com.game.catbackend.infra.repositories.PhraseRepository
 import org.springframework.stereotype.Service
@@ -10,8 +10,8 @@ import java.util.*
 @Service
 class PhraseService(val phraseRepository: PhraseRepository) {
 
-    fun add(phraseDto: PhraseDTO): Phrase {
-        val phrase = phraseDto.toPhrase()
+    fun add(phraseRequest: PhraseRequest): Phrase {
+        val phrase = phraseRequest.toPhrase()
         phrase.active = true
 
         return phraseRepository.save(phrase)
@@ -30,7 +30,7 @@ class PhraseService(val phraseRepository: PhraseRepository) {
     }
 
     fun getThreeRandomPhrases(): List<Phrase> {
-        return phraseRepository.findThreeRandomPhrases()
+        return phraseRepository.findAllThreeRandom()
     }
 
 }

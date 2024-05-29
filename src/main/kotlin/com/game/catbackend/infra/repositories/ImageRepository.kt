@@ -10,5 +10,5 @@ interface ImageRepository : JpaRepository<Image, Long> {
     @Query(
         value = "SELECT * FROM image ORDER BY RANDOM() LIMIT 3",
         nativeQuery = true)
-    fun findAllThreeRandom(): List<Image>;
+    fun findAllThreeRandom(): List<Image>
 }

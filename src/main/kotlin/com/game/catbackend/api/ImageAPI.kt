@@ -1,9 +1,10 @@
 package com.game.catbackend.api
 
-import com.game.catbackend.api.dto.ImageDTO
+import com.game.catbackend.api.dto.request.ImageRequest
 import com.game.catbackend.domain.entities.Image
 import com.game.catbackend.domain.services.ImageService
 import jakarta.validation.Valid
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.Optional
 
@@ -12,22 +13,23 @@ import java.util.Optional
 class ImageAPI(val imageService: ImageService) {
 
     @PostMapping()
-    fun add(@RequestBody @Valid imageDTO: ImageDTO ): Image {
-        return imageService.add(imageDTO)
+    fun add(@RequestBody @Valid imageRequest: ImageRequest): ResponseEntity<Image> {
+        return ResponseEntity.ok(imageService.add(imageRequest))
     }
 
     @GetMapping("/{id}")
-    fun get(@PathVariable id: Long): Optional<Image> {
-        return imageService.get(id)
+    fun get(@PathVariable id: Long): ResponseEntity<Optional<Image>> {
+        return ResponseEntity.ok(imageService.get(id))
     }
+
     @GetMapping()
-    fun getAll(): List<Image> {
-        return imageService.getAll()
+    fun getAll(): ResponseEntity<List<Image>> {
+        return ResponseEntity.ok(imageService.getAll())
     }
 
     @GetMapping("/random")
-    fun getRandom(): List<Image> {
-        return imageService.getRandom()
+    fun getRandom(): ResponseEntity<List<Image>> {
+        return ResponseEntity.ok(imageService.getRandom())
     }
 
 }

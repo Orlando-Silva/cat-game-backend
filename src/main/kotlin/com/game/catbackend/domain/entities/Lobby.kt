@@ -1,6 +1,6 @@
 package com.game.catbackend.domain.entities
 
-import com.game.catbackend.domain.enums.Status
+import com.game.catbackend.domain.enums.LobbyStatus
 import jakarta.persistence.*
 import java.util.*
 
@@ -18,7 +18,7 @@ class Lobby(
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 50)
-    var status: Status = Status.PENDING,
+    var status: LobbyStatus = LobbyStatus.PENDING,
 
     @Column(name = "room_id", nullable = false, columnDefinition = "BINARY(16)")
     var roomId: UUID = UUID.randomUUID(),
