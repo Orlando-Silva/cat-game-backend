@@ -5,6 +5,7 @@ import com.game.catbackend.domain.entities.Lobby
 import com.game.catbackend.domain.services.LobbyService
 import com.game.catbackend.api.dto.response.AddLobbyResponse
 import com.game.catbackend.api.dto.request.AddLobbyRequest
+import com.game.catbackend.api.dto.response.GetPlayersResponse
 import com.game.catbackend.api.dto.response.JoinLobbyResponse
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
@@ -24,6 +25,11 @@ class LobbyAPI(val lobbyService: LobbyService) {
     fun add(@RequestBody @Valid addLobbyRequest: AddLobbyRequest): ResponseEntity<AddLobbyResponse> {
         val response = lobbyService.addLobby(addLobbyRequest.username)
         return ResponseEntity.ok(response)
+    }
+
+    @GetMapping("/{roomId}/players")
+    fun getPlayers(@PathVariable roomId: UUID): GetPlayersResponse {
+        return lobbyService.getPlayers(roomId)
     }
 
     @PostMapping("/{roomId}")
